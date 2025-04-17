@@ -9,7 +9,6 @@ export function daysInMonth(date: Date): Record<string, Date> {
     const t = new Date(year, month - 1, i);
     const weekOfMonth = getWeekOfMonth(t);
     const dayOfWeek = t.getDay();
-    console.log(dayOfWeek);
     days[`${weekOfMonth}-${dayOfWeek}`] = t;
   }
 

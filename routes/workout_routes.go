@@ -2,14 +2,15 @@ package routes
 
 import (
 	"gym-tracker/controllers"
+	"gym-tracker/middleware"
 
 	"github.com/gin-gonic/gin"
 )
 
 func RegisterWorkoutRoutes(r *gin.Engine) {
-	workoutRoutes := r.Group("/api/workouts")
+	workoutRoutes := r.Group("/api/workouts", middleware.AuthMiddleware())
 	{
-		workoutRoutes.POST("/", controllers.CreateWorkout)
+		workoutRoutes.POST("/add", controllers.CreateWorkout)
 		workoutRoutes.GET("/", controllers.GetAllWorkouts)
 	}
 }

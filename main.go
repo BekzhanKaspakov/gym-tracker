@@ -1,6 +1,7 @@
 package main
 
 import (
+	"gym-tracker/config"
 	"gym-tracker/database"
 	"gym-tracker/routes"
 
@@ -8,10 +9,13 @@ import (
 )
 
 func main() {
-	database.ConnectDB()
+	config.LoadConfig()
+	database.ConnectDB(config.AppConfig.MongoURI)
 
 	r := gin.Default()
+	routes.RegisterAuthRoutes(r)
 	routes.RegisterWorkoutRoutes(r)
+	routes.RegisterExerciseRoutes(r)
 
-	r.Run(":8080")
+	r.Run(":" + config.AppConfig.Port)
 }

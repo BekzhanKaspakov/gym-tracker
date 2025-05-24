@@ -24,6 +24,18 @@ func CreateWorkout(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
+	userId, ok := c.Get("userId")
+	if !ok {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to insert exercise"})
+		return
+	}
+	sUserId, ok := userId.(string)
+	if !ok {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to insert exercise"})
+		return
+	}
+	workout.UserID = sUserId
+
 	_, err := database.WorkoutCollection.InsertOne(ctx, workout)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to insert workout"})

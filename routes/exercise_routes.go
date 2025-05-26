@@ -8,9 +8,11 @@ import (
 )
 
 func RegisterExerciseRoutes(r *gin.Engine) {
-	workoutRoutes := r.Group("/api/exercises", middleware.AuthMiddleware())
+	exerciseRoutes := r.Group("/api/exercises", middleware.AuthMiddleware())
 	{
-		workoutRoutes.POST("/add", controllers.CreateExercise)
-		workoutRoutes.GET("/", controllers.GetAllExercises)
+		exerciseRoutes.POST("/add", controllers.AddExercise)
+		exerciseRoutes.PATCH("/:id", controllers.EditExercise)
+		exerciseRoutes.GET("/categories", controllers.GetCategories)
+		exerciseRoutes.GET("/", controllers.GetAllExercises)
 	}
 }

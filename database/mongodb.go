@@ -26,7 +26,7 @@ func ConnectDB(uri string) {
 
 	MongoClient = client
 	WorkoutCollection = client.Database("gymTracker").Collection("workouts")
-	WorkoutCollection = client.Database("gymTracker").Collection("exercises")
+	ExerciseCollection = client.Database("gymTracker").Collection("exercises")
 
 	fmt.Println("✅ MongoDB Connected")
 }

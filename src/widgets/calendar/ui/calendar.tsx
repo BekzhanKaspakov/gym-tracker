@@ -1,5 +1,6 @@
 "use client";
 
+import { H3, P } from "@/shared/ui-kit/typography";
 import { classNames } from "@/shared/utils/classNames";
 import { daysInMonth } from "@/shared/utils/daysInMonth";
 import { getMonthName } from "@/shared/utils/getMonthName";
@@ -11,7 +12,13 @@ const getMonthDate = (baseDate: Date, offset: number) => {
   return date;
 };
 
-export const Calendar = () => {
+export const Calendar = ({
+  selectedDate,
+  onClickDate,
+}: {
+  selectedDate: Date;
+  onClickDate: (newDate: Date) => void;
+}) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [dragX, setDragX] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
@@ -54,14 +61,14 @@ export const Calendar = () => {
   return (
     <>
       <header className="p-4 pb-0 font-bold">
-        <h1>{getMonthName(currentMonth)}</h1>
+        <H3>{getMonthName(currentMonth)}</H3>
       </header>
       <div
         ref={containerRef}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
-        className="overflow-hidden relative w-full shadow-md rounded-xl p-2"
+        className="overflow-hidden relative w-full shadow-md rounded-xl p-2 pb-6"
       >
         <div
           className={classNames(
@@ -98,9 +105,24 @@ export const Calendar = () => {
                       return (
                         <td
                           key={`${day}-${week}`}
-                          className="text-center size-12"
+                          className={classNames(
+                            "text-center size-12 font-bold",
+                            {
+                              "bg-secondary text-primary-foreground rounded-xl":
+                                date?.getDate() === new Date().getDate() &&
+                                date?.getMonth() === new Date().getMonth() &&
+                                date?.getFullYear() ===
+                                  new Date().getFullYear(),
+                              "bg-primary text-primary-foreground rounded-xl":
+                                date?.getDate() === selectedDate.getDate() &&
+                                date?.getMonth() === selectedDate.getMonth() &&
+                                date?.getFullYear() ===
+                                  selectedDate.getFullYear(),
+                            },
+                          )}
+                          onClick={() => onClickDate(date)}
                         >
-                          {date?.getDate()}
+                          <P>{date?.getDate().toString()}</P>
                         </td>
                       );
                     })}

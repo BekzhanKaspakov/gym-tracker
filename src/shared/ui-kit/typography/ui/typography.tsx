@@ -87,4 +87,20 @@ const Muted: React.FC<Props> = ({ className, children }) => {
   );
 };
 
-export { H1, H2, H3, H4, P, Lead, Large, Muted, Blockquote, InlineCode };
+const Footnote: React.FC<Props> = ({ className, children }) => {
+  return <p className={`m-0 text-sm ${className}`}>{children}</p>;
+};
+
+export {
+  H1,
+  H2,
+  H3,
+  H4,
+  P,
+  Lead,
+  Large,
+  Muted,
+  Blockquote,
+  InlineCode,
+  Footnote,
+};

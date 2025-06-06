@@ -9,4 +9,5 @@ export {
   Muted,
   Blockquote,
   InlineCode,
+  Footnote,
 } from "./ui/typography";

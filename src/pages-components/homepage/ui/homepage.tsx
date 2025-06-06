@@ -8,7 +8,6 @@ export const HomePage = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   return (
     <div>
-      {/* <Header /> */}
       <Calendar selectedDate={selectedDate} onClickDate={setSelectedDate} />
       <SelectedDayExerciseList />
     </div>

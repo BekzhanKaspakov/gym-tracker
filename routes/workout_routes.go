@@ -12,6 +12,6 @@ func RegisterWorkoutRoutes(r *gin.Engine) {
 	{
 		workoutRoutes.POST("/add", controllers.AddWorkout)
 		workoutRoutes.PATCH("/:id", controllers.EditWorkout)
-		workoutRoutes.GET("/", controllers.GetAllWorkouts)
+		workoutRoutes.GET("", controllers.GetAllWorkouts)
 	}
 }

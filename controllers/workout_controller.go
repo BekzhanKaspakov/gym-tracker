@@ -94,21 +94,64 @@ func EditWorkout(c *gin.Context) {
 }
 
 func GetAllWorkouts(c *gin.Context) {
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
+	date := c.Query("date")
 
-	cursor, err := database.WorkoutCollection.Find(ctx, bson.M{})
+	filter := bson.M{}
+	if date != "" {
+		parsedDate, err := time.Parse("2006-01-02", date)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid date format. Use YYYY-MM-DD."})
+			return
+		}
+
+		start := parsedDate
+		end := parsedDate.Add(24 * time.Hour)
+
+		filter["date"] = bson.M{
+			"$gte": start.Format(time.RFC3339),
+			"$lt":  end.Format(time.RFC3339),
+		}
+	}
+
+	cursor, err := database.WorkoutCollection.Find(c, filter)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch workouts"})
 		return
 	}
-	defer cursor.Close(ctx)
+	defer cursor.Close(c)
 
-	var workouts []models.Workout
-	if err = cursor.All(ctx, &workouts); err != nil {
+	var rawWorkouts []models.Workout
+	if err := cursor.All(c, &rawWorkouts); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to parse workouts"})
 		return
 	}
 
-	c.JSON(http.StatusOK, workouts)
+	var workoutsWithExercises []models.WorkoutWithExercise
+	for _, workout := range rawWorkouts {
+		// Convert ExerciseID string to ObjectID
+		exerciseObjID, err := primitive.ObjectIDFromHex(workout.ExerciseID)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid exercise ID in workout"})
+			return
+		}
+
+		var exercise models.Exercise
+		err = database.ExerciseCollection.FindOne(c, bson.M{"_id": exerciseObjID}).Decode(&exercise)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch exercise for workout"})
+			return
+		}
+
+		workoutWithExercise := models.WorkoutWithExercise{
+			ID:       workout.ID,
+			UserID:   workout.UserID,
+			Exercise: exercise,
+			Date:     workout.Date,
+			Sets:     workout.Sets,
+		}
+
+		workoutsWithExercises = append(workoutsWithExercises, workoutWithExercise)
+	}
+
+	c.JSON(http.StatusOK, workoutsWithExercises)
 }

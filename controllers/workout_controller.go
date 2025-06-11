@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -154,4 +155,52 @@ func GetAllWorkouts(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, workoutsWithExercises)
+}
+
+func WorkoutsMonthlySummary(c *gin.Context) {
+	date := c.Query("date")
+
+	filter := bson.M{}
+	if date != "" {
+		parsedDate, err := time.Parse("2006-01-02", date)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid date format. Use YYYY-MM-DD."})
+			return
+		}
+
+		firstOfMonth := time.Date(parsedDate.Year(), parsedDate.Month(), 1, 0, 0, 0, 0, parsedDate.Location())
+		lastOfMonth := firstOfMonth.AddDate(0, 1, 0)
+
+		filter["date"] = bson.M{
+			"$gte": firstOfMonth.Format(time.RFC3339),
+			"$lt":  lastOfMonth.Format(time.RFC3339),
+		}
+	}
+
+	cursor, err := database.WorkoutCollection.Find(c, filter)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch workouts"})
+		return
+	}
+	defer cursor.Close(c)
+
+	var rawWorkouts []models.Workout
+	if err := cursor.All(c, &rawWorkouts); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to parse workouts"})
+		return
+	}
+
+	var workoutsSummary models.Month = make(map[int]bool)
+
+	for _, w := range rawWorkouts {
+		date, err := time.Parse(time.RFC3339, w.Date)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to parse date of a workout"})
+			return
+		}
+		_, _, day := date.Date()
+		workoutsSummary[day] = true
+	}
+
+	c.JSON(http.StatusOK, workoutsSummary)
 }

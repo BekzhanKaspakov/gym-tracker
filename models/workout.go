@@ -17,3 +17,5 @@ type WorkoutWithExercise struct {
 	Date     string             `json:"date"`
 	Sets     [][2]float64       `json:"sets"`
 }
+
+type Month map[int]bool

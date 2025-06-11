@@ -1,5 +1,6 @@
 "use client";
 
+import { useMonthlySummary } from "@/shared/api/workouts";
 import { H3, P } from "@/shared/ui-kit/typography";
 import { classNames } from "@/shared/utils/classNames";
 import { daysInMonth } from "@/shared/utils/daysInMonth";
@@ -22,6 +23,8 @@ export const Calendar = ({
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [dragX, setDragX] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
+
+  const { data: summary, isLoading } = useMonthlySummary(selectedDate);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const startX = useRef<number | null>(null);
@@ -68,7 +71,7 @@ export const Calendar = ({
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
-        className="overflow-hidden relative w-full shadow-md rounded-xl p-2 pb-6"
+        className="overflow-hidden relative w-full shadow-lg rounded-xl p-2 pb-6 mb-6"
       >
         <div
           className={classNames(
@@ -106,9 +109,9 @@ export const Calendar = ({
                         <td
                           key={`${day}-${week}`}
                           className={classNames(
-                            "text-center size-12 font-bold",
+                            "text-center size-12 font-bold relative pb-2",
                             {
-                              "bg-secondary text-primary-foreground rounded-xl":
+                              "bg-secondary text-secondary-foreground rounded-xl":
                                 date?.getDate() === new Date().getDate() &&
                                 date?.getMonth() === new Date().getMonth() &&
                                 date?.getFullYear() ===
@@ -123,6 +126,11 @@ export const Calendar = ({
                           onClick={() => onClickDate(date)}
                         >
                           <P>{date?.getDate().toString()}</P>
+                          {summary?.[`${date?.getDate()}`] && (
+                            <p className="absolute bottom-0 m-auto left-0 right-0">
+                              •
+                            </p>
+                          )}
                         </td>
                       );
                     })}

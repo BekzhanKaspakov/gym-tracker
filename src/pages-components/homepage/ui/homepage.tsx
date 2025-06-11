@@ -17,7 +17,13 @@ export const HomePage = () => {
 
   return (
     <div>
-      <Calendar selectedDate={selectedDate} onClickDate={setSelectedDate} />
+      <Calendar
+        selectedDate={selectedDate}
+        onClickDate={(date) => {
+          setSelectedDate(date);
+          console.log(date);
+        }}
+      />
       <WorkoutsList workouts={workouts ?? []} />
     </div>
   );

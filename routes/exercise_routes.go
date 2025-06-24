@@ -13,6 +13,6 @@ func RegisterExerciseRoutes(r *gin.Engine) {
 		exerciseRoutes.POST("/add", controllers.AddExercise)
 		exerciseRoutes.PATCH("/:id", controllers.EditExercise)
 		exerciseRoutes.GET("/categories", controllers.GetCategories)
-		exerciseRoutes.GET("/", controllers.GetAllExercises)
+		exerciseRoutes.GET("", controllers.GetAllExercises)
 	}
 }

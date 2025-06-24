@@ -4,3 +4,5 @@ export * from "./button";
 export * from "./card";
 export * from "./label";
 export * from "./typography";
+export * from "./dialog";
+export * from "./drawer";

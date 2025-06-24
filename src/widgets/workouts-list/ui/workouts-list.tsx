@@ -10,7 +10,7 @@ import { WorkoutsListProps } from "../lib/types";
 
 export const WorkoutsList = ({ workouts }: WorkoutsListProps) => {
   return (
-    <section className="flex flex-col gap-y-1">
+    <section className="flex flex-col gap-y-1 flex-1">
       {workouts.map((x) => (
         <div key={x.id} className="px-6 w-full">
           <Accordion type="single" collapsible>

@@ -1,6 +1,8 @@
 import { format } from "date-fns";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { axiosInstance } from "../axios";
+import { Exercise } from "./exercises";
+import { AxiosError } from "axios";
 
 const WORKOUT_URI = {
   editWorkout: (id: string) => `/api/workouts/${id}`,
@@ -9,18 +11,12 @@ const WORKOUT_URI = {
   getMonthlySummary: "/api/workouts/summary",
 };
 
-const QUERY_KEYS = {
+export const WORKOUT_QUERY_KEYS = {
   editWorkout: (params?: unknown) => ["workouts-edit", params],
   postWorkout: (params?: unknown) => ["workouts-add", params],
   getAllWorkouts: (params?: unknown) => ["workouts", params],
   getMonthlySummary: (params?: unknown) => ["monthly-summary", params],
 };
-
-export interface Exercise {
-  id: string;
-  label: string;
-  exerciseCategory: string;
-}
 
 export interface WorkoutRecord {
   id: string;
@@ -33,9 +29,14 @@ export interface MonthlySummary {
   [day: number]: boolean;
 }
 
+export interface AddWorkoutRequest
+  extends Omit<WorkoutRecord, "id" | "exercise"> {
+  exerciseId: string;
+}
+
 export const useWorkouts = (date: Date) => {
   return useQuery<WorkoutRecord[]>({
-    queryKey: QUERY_KEYS.getAllWorkouts(date.toISOString()),
+    queryKey: WORKOUT_QUERY_KEYS.getAllWorkouts(date.toISOString()),
     queryFn: () =>
       axiosInstance
         .get(WORKOUT_URI.getAllWorkouts, {
@@ -46,9 +47,8 @@ export const useWorkouts = (date: Date) => {
 };
 
 export const useMonthlySummary = (date: Date) => {
-  console.log(format(new Date(date), "yyyy-MM-dd"));
   return useQuery<MonthlySummary>({
-    queryKey: QUERY_KEYS.getMonthlySummary(
+    queryKey: WORKOUT_QUERY_KEYS.getMonthlySummary(
       `${date.getUTCMonth()} ${date.getUTCFullYear()}`,
     ),
     queryFn: () =>
@@ -57,5 +57,15 @@ export const useMonthlySummary = (date: Date) => {
           params: { date: format(new Date(date), "yyyy-MM-dd") },
         })
         .then(({ data }) => data),
+  });
+};
+
+export const useAddWorkout = () => {
+  return useMutation<WorkoutRecord, AxiosError, AddWorkoutRequest>({
+    mutationFn: (body: AddWorkoutRequest) =>
+      axiosInstance
+        .post(WORKOUT_URI.postWorkout, body)
+        .then(({ data }) => data),
+    throwOnError: false,
   });
 };

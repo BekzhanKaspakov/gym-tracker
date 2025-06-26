@@ -11,16 +11,12 @@ import {
   Button,
   P,
   Drawer,
-  DrawerClose,
   DrawerContent,
-  DrawerDescription,
   DrawerFooter,
   DrawerHeader,
-  DrawerTitle,
   DrawerTrigger,
 } from "@/shared/ui-kit";
 import { groupBy } from "@/shared/utils/groupBy";
-import { format } from "date-fns";
 
 import { ArrowRight } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -29,8 +25,9 @@ const categories = ["Arm", "Back", "Chest", "Quadriceps", "Shoulder"];
 export function AddWorkoutDrawer({ date }: { date: Date }) {
   const addExercise = useAddWorkout();
 
-  const { data: exercises, isLoading } = useExercises();
+  const { data: exercises } = useExercises();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const exerciseByCategory = useMemo(
     () => groupBy(exercises ?? [], (i) => i.exerciseCategory),
@@ -49,6 +46,7 @@ export function AddWorkoutDrawer({ date }: { date: Date }) {
     };
     addExercise.mutate(payload, {
       onSuccess: () => {
+        setIsOpen(false);
         queryClient.invalidateQueries({
           queryKey: WORKOUT_QUERY_KEYS.getAllWorkouts(date.toISOString()),
         });
@@ -57,7 +55,7 @@ export function AddWorkoutDrawer({ date }: { date: Date }) {
   };
 
   return (
-    <Drawer onClose={handleClear}>
+    <Drawer onClose={handleClear} open={isOpen} onOpenChange={setIsOpen}>
       <DrawerTrigger asChild>
         <Button className="flex-1">Add more</Button>
       </DrawerTrigger>

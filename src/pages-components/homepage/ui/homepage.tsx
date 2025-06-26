@@ -2,8 +2,7 @@
 
 import { useWorkouts } from "@/shared/api/workouts";
 import { Spinner } from "@/shared/ui-kit/spinner";
-import { AddWorkoutDrawer } from "@/widgets/add-workout";
-import { AddWorkoutButton } from "@/widgets/add-workout-button";
+import { AddWorkoutButton } from "@/widgets/add-workout";
 import { Calendar } from "@/widgets/calendar";
 import { WorkoutsList } from "@/widgets/workouts-list/ui/workouts-list";
 import { useState } from "react";

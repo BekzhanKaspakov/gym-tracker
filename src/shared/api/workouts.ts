@@ -3,6 +3,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { axiosInstance } from "../axios";
 import { Exercise } from "./exercises";
 import { AxiosError } from "axios";
+import { queryClient } from "./query-client";
 
 const WORKOUT_URI = {
   editWorkout: (id: string) => `/api/workouts/${id}`,
@@ -34,9 +35,13 @@ export interface AddWorkoutRequest
   exerciseId: string;
 }
 
+export interface UpdateWorkoutRequest extends Omit<WorkoutRecord, "exercise"> {
+  exerciseId: string;
+}
+
 export const useWorkouts = (date: Date) => {
   return useQuery<WorkoutRecord[]>({
-    queryKey: WORKOUT_QUERY_KEYS.getAllWorkouts(date.toISOString()),
+    queryKey: WORKOUT_QUERY_KEYS.getAllWorkouts(format(date, "yyyy-MM-dd")),
     queryFn: () =>
       axiosInstance
         .get(WORKOUT_URI.getAllWorkouts, {
@@ -65,6 +70,16 @@ export const useAddWorkout = () => {
     mutationFn: (body: AddWorkoutRequest) =>
       axiosInstance
         .post(WORKOUT_URI.postWorkout, body)
+        .then(({ data }) => data),
+    throwOnError: false,
+  });
+};
+
+export const useUpdateWorkout = () => {
+  return useMutation<WorkoutRecord, AxiosError, UpdateWorkoutRequest>({
+    mutationFn: (body: UpdateWorkoutRequest) =>
+      axiosInstance
+        .patch(WORKOUT_URI.editWorkout(body.id), body)
         .then(({ data }) => data),
     throwOnError: false,
   });

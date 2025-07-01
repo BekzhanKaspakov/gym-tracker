@@ -17,6 +17,7 @@ import {
   DrawerTrigger,
 } from "@/shared/ui-kit";
 import { groupBy } from "@/shared/utils/groupBy";
+import { format } from "date-fns";
 
 import { ArrowRight } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -48,7 +49,9 @@ export function AddWorkoutDrawer({ date }: { date: Date }) {
       onSuccess: () => {
         setIsOpen(false);
         queryClient.invalidateQueries({
-          queryKey: WORKOUT_QUERY_KEYS.getAllWorkouts(date.toISOString()),
+          queryKey: WORKOUT_QUERY_KEYS.getAllWorkouts(
+            format(date, "yyyy-MM-dd"),
+          ),
         });
       },
     });

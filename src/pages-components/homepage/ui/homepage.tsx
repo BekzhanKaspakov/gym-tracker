@@ -10,16 +10,10 @@ import { useState } from "react";
 export const HomePage = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
 
-  const { data: workouts, isLoading } = useWorkouts(selectedDate);
-
-  if (isLoading) {
-    return <Spinner />;
-  }
-
   return (
     <div className="h-full flex flex-col pb-5">
       <Calendar selectedDate={selectedDate} onClickDate={setSelectedDate} />
-      <WorkoutsList workouts={workouts ?? []} />
+      <WorkoutsList selectedDate={selectedDate} />
       <AddWorkoutButton selectedDate={selectedDate} />
     </div>
   );

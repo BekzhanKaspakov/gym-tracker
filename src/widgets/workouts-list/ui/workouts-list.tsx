@@ -7,11 +7,24 @@ import {
 import { Button } from "@/shared/ui-kit/button/ui/button";
 import Image from "next/image";
 import { WorkoutsListProps } from "../lib/types";
+import { EditSetsDrawer } from "@/widgets/edit-sets";
+import { useState } from "react";
+import { useWorkouts, WorkoutRecord } from "@/shared/api/workouts";
+import { Spinner } from "@/shared/ui-kit/spinner";
 
-export const WorkoutsList = ({ workouts }: WorkoutsListProps) => {
+export const WorkoutsList = ({ selectedDate }: WorkoutsListProps) => {
+  const { data: workouts, isLoading } = useWorkouts(selectedDate);
+  const [selectedWorkout, setSelectedWorkout] = useState<WorkoutRecord | null>(
+    null,
+  );
+
+  if (isLoading) {
+    return <Spinner />;
+  }
+
   return (
     <section className="flex flex-col gap-y-1 flex-1">
-      {workouts.map((x) => (
+      {workouts?.map((x) => (
         <div key={x.id} className="px-6 w-full">
           <Accordion type="single" collapsible>
             <AccordionItem value="item-1">
@@ -32,7 +45,9 @@ export const WorkoutsList = ({ workouts }: WorkoutsListProps) => {
                     <li
                       key={`${x.id}-${index}`}
                       className="flex gap-x-2 items-center"
+                      onClick={() => setSelectedWorkout(x)}
                     >
+                      {" "}
                       <p className="px-4">{index + 1}</p>
                       <Button variant="secondary" className="flex-1">
                         {weight}
@@ -42,7 +57,10 @@ export const WorkoutsList = ({ workouts }: WorkoutsListProps) => {
                       </Button>
                     </li>
                   ))}
-                  <li className="flex gap-x-2 items-center">
+                  <li
+                    className="flex gap-x-2 items-center"
+                    onClick={() => setSelectedWorkout(x)}
+                  >
                     <p className="px-4">{x.sets.length + 1}</p>
                     <Button variant="secondary" className="flex-1"></Button>
                     <Button variant="secondary" className="flex-1"></Button>
@@ -53,6 +71,12 @@ export const WorkoutsList = ({ workouts }: WorkoutsListProps) => {
           </Accordion>
         </div>
       ))}
+      {selectedWorkout && (
+        <EditSetsDrawer
+          selectedWorkout={selectedWorkout}
+          setSelectedWorkout={setSelectedWorkout}
+        />
+      )}
     </section>
   );
 };

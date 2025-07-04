@@ -17,7 +17,7 @@ function Input({
   ...props
 }: InputProps) {
   return (
-    <div>
+    <>
       <input
         type={type}
         data-slot="input"
@@ -30,7 +30,7 @@ function Input({
         {...props}
       />
       <HelperText footnote={footnote} disabled={disabled} error={error} />
-    </div>
+    </>
   );
 }
 

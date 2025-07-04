@@ -13,7 +13,6 @@ import {
   Drawer,
   DrawerContent,
   DrawerFooter,
-  DrawerHeader,
   DrawerTrigger,
 } from "@/shared/ui-kit";
 import { groupBy } from "@/shared/utils/groupBy";
@@ -21,7 +20,8 @@ import { format } from "date-fns";
 
 import { ArrowRight } from "lucide-react";
 import { useMemo, useState } from "react";
-const categories = ["Arm", "Back", "Chest", "Quadriceps", "Shoulder"];
+import { AddExercise } from "./add-exercise";
+import { CATEGORIES } from "@/shared/constants/common";
 
 export function AddWorkoutDrawer({ date }: { date: Date }) {
   const addExercise = useAddWorkout();
@@ -48,6 +48,7 @@ export function AddWorkoutDrawer({ date }: { date: Date }) {
     addExercise.mutate(payload, {
       onSuccess: () => {
         setIsOpen(false);
+        setSelectedCategory(null)
         queryClient.invalidateQueries({
           queryKey: WORKOUT_QUERY_KEYS.getAllWorkouts(
             format(date, "yyyy-MM-dd"),
@@ -58,19 +59,16 @@ export function AddWorkoutDrawer({ date }: { date: Date }) {
   };
 
   return (
-    <Drawer onClose={handleClear} open={isOpen} onOpenChange={setIsOpen}>
-      <DrawerTrigger asChild>
-        <Button className="flex-1">Add more</Button>
-      </DrawerTrigger>
-      <DrawerContent>
-        <div className="mx-auto w-full max-w-sm">
-          <DrawerHeader>
-            {/* <DrawerTitle>Move Goal</DrawerTitle>
-            <DrawerDescription>Set your daily activity goal.</DrawerDescription> */}
-          </DrawerHeader>
-          <section className="flex flex-col gap-2">
-            {selectedCategory
-              ? exerciseByCategory[selectedCategory].map((exercise) => (
+    <>
+      <Drawer onClose={handleClear} open={isOpen} onOpenChange={setIsOpen}>
+        <DrawerTrigger asChild>
+          <Button className="flex-1">Add more</Button>
+        </DrawerTrigger>
+        <DrawerContent>
+          <div className="mx-auto w-full max-w-sm">
+            <section className="flex flex-col gap-2">
+              {selectedCategory
+                ? exerciseByCategory[selectedCategory]?.map((exercise) => (
                   <Button
                     key={exercise.id}
                     className="flex justify-between"
@@ -81,12 +79,13 @@ export function AddWorkoutDrawer({ date }: { date: Date }) {
                     <P>{exercise.label}</P>
                   </Button>
                 ))
-              : categories.map((category) => (
+                : CATEGORIES.map((category) => (
                   <Button
                     key={category}
                     className="flex justify-between"
                     variant="outline"
                     size="xl"
+                    disabled={exerciseByCategory[category] == undefined}
                     onClick={() => setSelectedCategory(category)}
                   >
                     <P>{category}</P>
@@ -99,16 +98,14 @@ export function AddWorkoutDrawer({ date }: { date: Date }) {
                     </div>
                   </Button>
                 ))}
-          </section>
-          <DrawerFooter>
-            {/* <Button>Submit</Button>
-            <DrawerClose asChild>
-              <Button variant="outline">Cancel</Button>
-            </DrawerClose> */}
-          </DrawerFooter>
-        </div>
-      </DrawerContent>
-    </Drawer>
+            </section>
+            <DrawerFooter>
+              <AddExercise />
+            </DrawerFooter>
+          </div>
+        </DrawerContent>
+      </Drawer>
+    </>
   );
 }
 

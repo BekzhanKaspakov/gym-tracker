@@ -126,3 +126,15 @@ body {
     height: 100vh;
     width: 100vw;
 }
+
+/* Убирает стрелки в Chrome, Safari, Edge */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Убирает стрелки в Firefox */
+input[type="number"] {
+    -moz-appearance: textfield;
+}

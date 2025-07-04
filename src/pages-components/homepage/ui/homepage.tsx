@@ -1,7 +1,5 @@
 "use client";
 
-import { useWorkouts } from "@/shared/api/workouts";
-import { Spinner } from "@/shared/ui-kit/spinner";
 import { AddWorkoutButton } from "@/widgets/add-workout";
 import { Calendar } from "@/widgets/calendar";
 import { WorkoutsList } from "@/widgets/workouts-list/ui/workouts-list";

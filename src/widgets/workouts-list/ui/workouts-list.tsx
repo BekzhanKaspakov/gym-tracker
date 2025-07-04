@@ -41,7 +41,7 @@ export const WorkoutsList = ({ selectedDate }: WorkoutsListProps) => {
               </AccordionTrigger>
               <AccordionContent>
                 <ol className="flex flex-col gap-y-1">
-                  {x.sets.map(([weight, reps], index) => (
+                  {x.sets.length > 0 ? x.sets.map(([weight, reps], index) => (
                     <li
                       key={`${x.id}-${index}`}
                       className="flex gap-x-2 items-center"
@@ -56,27 +56,30 @@ export const WorkoutsList = ({ selectedDate }: WorkoutsListProps) => {
                         {reps}
                       </Button>
                     </li>
-                  ))}
-                  <li
+                  )) : (<li
                     className="flex gap-x-2 items-center"
                     onClick={() => setSelectedWorkout(x)}
                   >
-                    <p className="px-4">{x.sets.length + 1}</p>
-                    <Button variant="secondary" className="flex-1"></Button>
-                    <Button variant="secondary" className="flex-1"></Button>
-                  </li>
+                    <p className="px-4">+</p>
+                    <Button variant="secondary" className="flex-1">
+                    </Button>
+                    <Button variant="secondary" className="flex-1">
+                    </Button>
+                  </li>)}
                 </ol>
               </AccordionContent>
             </AccordionItem>
           </Accordion>
-        </div>
+        </div >
       ))}
-      {selectedWorkout && (
-        <EditSetsDrawer
-          selectedWorkout={selectedWorkout}
-          setSelectedWorkout={setSelectedWorkout}
-        />
-      )}
-    </section>
+      {
+        selectedWorkout && (
+          <EditSetsDrawer
+            selectedWorkout={selectedWorkout}
+            setSelectedWorkout={setSelectedWorkout}
+          />
+        )
+      }
+    </section >
   );
 };

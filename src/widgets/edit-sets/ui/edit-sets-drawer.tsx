@@ -12,6 +12,7 @@ import {
   Input,
 } from "@/shared/ui-kit";
 import { format } from "date-fns";
+import { CirclePlus, PlusSquare, Trash2 } from "lucide-react";
 import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
 
 export const EditSetsDrawer = ({
@@ -29,6 +30,10 @@ export const EditSetsDrawer = ({
 
   const handleAddSet = () => {
     setExerciseSets([...exerciseSets, [0, 0]]);
+  };
+
+  const handleDeleteSet = (index: number) => {
+    setExerciseSets([...exerciseSets.slice(0, index), ...exerciseSets.slice(index + 1)]);
   };
 
   const handleChange = (isWeight: boolean, newValue: number, index: number) => {
@@ -64,9 +69,9 @@ export const EditSetsDrawer = ({
   return (
     <Drawer open={!!selectedExercise} onClose={handleCancel}>
       <DrawerContent>
-        <div className="mx-auto w-full max-w-sm py-4">
+        <div className="mx-auto w-full max-w-sm pt-4">
           <section className="flex flex-col gap-2">
-            <ol className="flex flex-col gap-y-1">
+            <ol className="flex flex-col gap-y-2">
               {exerciseSets.map(([weight, reps], index) => (
                 <li key={index} className="flex gap-x-2 items-center">
                   <p className="px-4">{index + 1}</p>
@@ -84,23 +89,24 @@ export const EditSetsDrawer = ({
                       handleChange(false, Number(e.target.value), index)
                     }
                   />
+                  <Trash2 className="size-9" onClick={() => handleDeleteSet(index)} />
                 </li>
               ))}
-              <li className="flex gap-x-2 items-center" onClick={handleAddSet}>
-                <p className="px-4">+</p>
-                <Button variant="secondary" className="flex-1"></Button>
-                <Button variant="secondary" className="flex-1"></Button>
-              </li>
             </ol>
           </section>
         </div>
-        <DrawerFooter className="flex flex-row">
-          <Button variant="outline" className="flex-1" onClick={handleCancel}>
-            Cancel
+        <DrawerFooter className="flex flex-col justify-center">
+          <Button className="flex gap-x-2 items-center" variant="secondary" onClick={handleAddSet}>
+            <CirclePlus />
           </Button>
-          <Button variant="default" className="flex-1" onClick={handleSubmit}>
-            Save
-          </Button>
+          <div className="flex flex-row gap-2">
+            <Button variant="outline" className="flex-1" onClick={handleCancel}>
+              Cancel
+            </Button>
+            <Button variant="default" className="flex-1" onClick={handleSubmit}>
+              Save
+            </Button>
+          </div>
         </DrawerFooter>
       </DrawerContent>
     </Drawer>

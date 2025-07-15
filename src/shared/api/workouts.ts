@@ -3,10 +3,10 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { axiosInstance } from "../axios";
 import { Exercise } from "./exercises";
 import { AxiosError } from "axios";
-import { queryClient } from "./query-client";
 
 const WORKOUT_URI = {
   editWorkout: (id: string) => `/api/workouts/${id}`,
+  deleteWorkout: (id: string) => `/api/workouts/${id}`,
   postWorkout: "/api/workouts/add",
   getAllWorkouts: "/api/workouts",
   getMonthlySummary: "/api/workouts/summary",
@@ -80,6 +80,16 @@ export const useUpdateWorkout = () => {
     mutationFn: (body: UpdateWorkoutRequest) =>
       axiosInstance
         .patch(WORKOUT_URI.editWorkout(body.id), body)
+        .then(({ data }) => data),
+    throwOnError: false,
+  });
+};
+
+export const useDeleteWorkout = () => {
+  return useMutation({
+    mutationFn: (workoutId: string) =>
+      axiosInstance
+        .delete(WORKOUT_URI.editWorkout(workoutId))
         .then(({ data }) => data),
     throwOnError: false,
   });

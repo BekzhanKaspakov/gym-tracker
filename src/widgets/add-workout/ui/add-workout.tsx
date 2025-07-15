@@ -41,7 +41,7 @@ export function AddWorkoutDrawer({ date }: { date: Date }) {
 
   const handleAddWorkout = (exercise: Exercise) => {
     const payload: AddWorkoutRequest = {
-      date: date.toISOString(),
+      date: format(date, "yyyy-MM-dd\'T\'HH:mm:ss\'.000Z\'"),
       exerciseId: exercise.id,
       sets: [],
     };
@@ -52,6 +52,11 @@ export function AddWorkoutDrawer({ date }: { date: Date }) {
         queryClient.invalidateQueries({
           queryKey: WORKOUT_QUERY_KEYS.getAllWorkouts(
             format(date, "yyyy-MM-dd"),
+          ),
+        });
+        queryClient.invalidateQueries({
+          queryKey: WORKOUT_QUERY_KEYS.getMonthlySummary(
+            `${date.getUTCMonth()} ${date.getUTCFullYear()}`,
           ),
         });
       },

@@ -24,7 +24,7 @@ export const Calendar = ({
   const [dragX, setDragX] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
 
-  const { data: summary, isLoading } = useMonthlySummary(selectedDate);
+  const { data: summary, } = useMonthlySummary(selectedDate);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const startX = useRef<number | null>(null);
@@ -115,12 +115,12 @@ export const Calendar = ({
                                 date?.getDate() === new Date().getDate() &&
                                 date?.getMonth() === new Date().getMonth() &&
                                 date?.getFullYear() ===
-                                  new Date().getFullYear(),
+                                new Date().getFullYear(),
                               "bg-primary text-primary-foreground rounded-xl":
                                 date?.getDate() === selectedDate.getDate() &&
                                 date?.getMonth() === selectedDate.getMonth() &&
                                 date?.getFullYear() ===
-                                  selectedDate.getFullYear(),
+                                selectedDate.getFullYear(),
                             },
                           )}
                           onClick={() => onClickDate(date)}

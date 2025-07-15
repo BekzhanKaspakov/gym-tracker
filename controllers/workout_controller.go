@@ -98,6 +98,32 @@ func EditWorkout(c *gin.Context) {
 	c.JSON(http.StatusOK, update)
 }
 
+func DeleteWorkout(c *gin.Context) {
+	workoutId := c.Param("id")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	userId, err := utils.GetUserID(c)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	workout, err := utils.FindUserOwnedWorkoutByID(workoutId, *userId)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+
+	filter := bson.M{"_id": workout.ID, "userId": workout.UserID}
+	_, err = database.WorkoutCollection.DeleteOne(ctx, filter)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete workout"})
+		return
+	}
+	c.JSON(http.StatusOK, nil)
+}
+
 func GetAllWorkouts(c *gin.Context) {
 	date := c.Query("date")
 

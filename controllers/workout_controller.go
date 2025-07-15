@@ -40,8 +40,13 @@ func AddWorkout(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	}
+	parsedDate, err := time.Parse(time.RFC3339, workoutReq.Date)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid date format. Use YYYY-MM-DD."})
+		return
+	}
 
-	workout := models.Workout{ID: workoutId, UserID: *userId, ExerciseID: workoutReq.ExerciseID, Date: workoutReq.Date, Sets: workoutReq.Sets}
+	workout := models.Workout{ID: workoutId, UserID: *userId, ExerciseID: workoutReq.ExerciseID, Date: parsedDate, Sets: workoutReq.Sets}
 	_, err = database.WorkoutCollection.InsertOne(ctx, workout)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to insert workout"})
@@ -108,8 +113,8 @@ func GetAllWorkouts(c *gin.Context) {
 		end := parsedDate.Add(24 * time.Hour)
 
 		filter["date"] = bson.M{
-			"$gte": start.Format(time.RFC3339),
-			"$lt":  end.Format(time.RFC3339),
+			"$gte": start,
+			"$lt":  end,
 		}
 	}
 
@@ -171,8 +176,8 @@ func WorkoutsMonthlySummary(c *gin.Context) {
 		lastOfMonth := firstOfMonth.AddDate(0, 1, 0)
 
 		filter["date"] = bson.M{
-			"$gte": firstOfMonth.Format(time.RFC3339),
-			"$lt":  lastOfMonth.Format(time.RFC3339),
+			"$gte": firstOfMonth,
+			"$lt":  lastOfMonth,
 		}
 	}
 
@@ -192,12 +197,7 @@ func WorkoutsMonthlySummary(c *gin.Context) {
 	var workoutsSummary models.Month = make(map[int]bool)
 
 	for _, w := range rawWorkouts {
-		date, err := time.Parse(time.RFC3339, w.Date)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to parse date of a workout"})
-			return
-		}
-		_, _, day := date.Date()
+		_, _, day := w.Date.Date()
 		workoutsSummary[day] = true
 	}
 

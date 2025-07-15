@@ -14,21 +14,6 @@ A simple REST API server for tracking gym workouts, built in **Go** and powered 
 
 ---
 
-## 📁 Project Structure
-
-go-gym-tracker/
-├── main.go # Entry point for server
-├── handlers/ # HTTP handler functions
-├── models/ # Data models (Exercise, Workout, etc.)
-├── routes/ # Route definitions
-├── .env # Environment variables
-├── Dockerfile # Docker build instructions
-├── docker-compose.yml # Local container orchestration
-└── README.md
-
-
----
-
 ## ⚙️ Prerequisites
 
 - Go 1.23

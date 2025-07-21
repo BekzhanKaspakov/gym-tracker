@@ -31,7 +31,7 @@ export function AddWorkoutDrawer({ date }: { date: Date }) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const exerciseByCategory = useMemo(
-    () => groupBy(exercises ?? [], (i) => i.exerciseCategory),
+    () => groupBy(exercises ?? [], (i) => i.exerciseCategory as keyof Exercise),
     [exercises],
   );
 
@@ -48,7 +48,7 @@ export function AddWorkoutDrawer({ date }: { date: Date }) {
     addExercise.mutate(payload, {
       onSuccess: () => {
         setIsOpen(false);
-        setSelectedCategory(null)
+        setSelectedCategory(null);
         queryClient.invalidateQueries({
           queryKey: WORKOUT_QUERY_KEYS.getAllWorkouts(
             format(date, "yyyy-MM-dd"),
@@ -73,36 +73,41 @@ export function AddWorkoutDrawer({ date }: { date: Date }) {
           <div className="mx-auto w-full max-w-sm">
             <section className="flex flex-col gap-2">
               {selectedCategory
-                ? exerciseByCategory[selectedCategory]?.map((exercise) => (
-                  <Button
-                    key={exercise.id}
-                    className="flex justify-between"
-                    variant="outline"
-                    size="xl"
-                    onClick={() => handleAddWorkout(exercise)}
-                  >
-                    <P>{exercise.label}</P>
-                  </Button>
-                ))
+                ? exerciseByCategory[selectedCategory as keyof Exercise]?.map(
+                    (exercise: Exercise) => (
+                      <Button
+                        key={exercise.id}
+                        className="flex justify-between"
+                        variant="outline"
+                        size="xl"
+                        onClick={() => handleAddWorkout(exercise)}
+                      >
+                        <P>{exercise.label}</P>
+                      </Button>
+                    ),
+                  )
                 : CATEGORIES.map((category) => (
-                  <Button
-                    key={category}
-                    className="flex justify-between"
-                    variant="outline"
-                    size="xl"
-                    disabled={exerciseByCategory[category] == undefined}
-                    onClick={() => setSelectedCategory(category)}
-                  >
-                    <P>{category}</P>
-                    <div className="flex gap-2 items-center">
-                      <ExerciseCount
-                        exercises={exercises}
-                        exerciseCategory={category}
-                      />
-                      <ArrowRight />
-                    </div>
-                  </Button>
-                ))}
+                    <Button
+                      key={category}
+                      className="flex justify-between"
+                      variant="outline"
+                      size="xl"
+                      disabled={
+                        exerciseByCategory[category as keyof Exercise] ==
+                        undefined
+                      }
+                      onClick={() => setSelectedCategory(category)}
+                    >
+                      <P>{category}</P>
+                      <div className="flex gap-2 items-center">
+                        <ExerciseCount
+                          exercises={exercises}
+                          exerciseCategory={category}
+                        />
+                        <ArrowRight />
+                      </div>
+                    </Button>
+                  ))}
             </section>
             <DrawerFooter>
               <AddExercise />

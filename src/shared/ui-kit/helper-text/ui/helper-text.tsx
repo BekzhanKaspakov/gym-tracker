@@ -1,5 +1,5 @@
 import { ReactElement } from "react";
-import { Footnote, P } from "../../typography";
+import { Footnote } from "../../typography";
 import { classNames } from "@/shared/utils/classNames";
 import { getErrorMessage } from "../lib/utils";
 

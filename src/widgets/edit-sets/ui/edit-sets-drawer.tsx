@@ -12,7 +12,7 @@ import {
   Input,
 } from "@/shared/ui-kit";
 import { format } from "date-fns";
-import { CirclePlus, PlusSquare, Trash2 } from "lucide-react";
+import { CirclePlus, Trash2 } from "lucide-react";
 import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
 
 export const EditSetsDrawer = ({
@@ -33,7 +33,10 @@ export const EditSetsDrawer = ({
   };
 
   const handleDeleteSet = (index: number) => {
-    setExerciseSets([...exerciseSets.slice(0, index), ...exerciseSets.slice(index + 1)]);
+    setExerciseSets([
+      ...exerciseSets.slice(0, index),
+      ...exerciseSets.slice(index + 1),
+    ]);
   };
 
   const handleChange = (isWeight: boolean, newValue: number, index: number) => {
@@ -89,14 +92,21 @@ export const EditSetsDrawer = ({
                       handleChange(false, Number(e.target.value), index)
                     }
                   />
-                  <Trash2 className="size-9" onClick={() => handleDeleteSet(index)} />
+                  <Trash2
+                    className="size-9"
+                    onClick={() => handleDeleteSet(index)}
+                  />
                 </li>
               ))}
             </ol>
           </section>
         </div>
         <DrawerFooter className="flex flex-col justify-center">
-          <Button className="flex gap-x-2 items-center" variant="secondary" onClick={handleAddSet}>
+          <Button
+            className="flex gap-x-2 items-center"
+            variant="secondary"
+            onClick={handleAddSet}
+          >
             <CirclePlus />
           </Button>
           <div className="flex flex-row gap-2">

@@ -8,7 +8,9 @@ export interface AuthContextType {
   setUser: React.Dispatch<React.SetStateAction<UserContext | undefined>>;
 }
 
-export type UserContext = {};
+type EmptyObj = Record<PropertyKey, never>;
+
+export interface UserContext extends EmptyObj {}
 
 export interface AuthProviderProps {
   children?: React.ReactNode;

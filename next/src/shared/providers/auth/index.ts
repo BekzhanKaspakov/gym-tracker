@@ -1,2 +1,2 @@
-export { AuthProvider } from './AuthProvider.component'
-export { useAuth } from './hooks'
+export { AuthProvider } from "./auth-provider";
+export { useAuth } from "./hooks";

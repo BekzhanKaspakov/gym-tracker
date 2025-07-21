@@ -19,6 +19,12 @@ jobs:
   detect-and-build:
     runs-on: ubuntu-latest
 
+    permissions:
+      packages: write
+      contents: read
+      attestations: write
+      id-token: write
+
     env:
       FRONTEND_IMAGE: frontend
       BACKEND_IMAGE: backend

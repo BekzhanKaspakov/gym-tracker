@@ -4,7 +4,7 @@ import { Layout } from "@/widgets/layout";
 
 export const metadata: Metadata = {
   title: "Gym Tracker",
-  description: "To keep track of your gains",
+  description: "Gains",
 };
 
 export default function RootLayout({

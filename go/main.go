@@ -22,8 +22,6 @@ func main() {
 	corsConfig.AllowOrigins = []string{"http://localhost:3000"}
 	corsConfig.AllowCredentials = true
 	corsConfig.AllowHeaders = []string{"authorization", "content-type"}
-	// config.AllowOrigins = []string{"http://google.com", "http://facebook.com"}
-	// config.AllowAllOrigins = true
 
 	r.Use(cors.New(corsConfig))
 	routes.RegisterAuthRoutes(r)

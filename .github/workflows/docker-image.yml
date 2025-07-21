@@ -6,7 +6,7 @@ on:
       - trunk
     paths:
       - "next/**"
-      - "front/**"
+      - "go/**"
       - ".github/workflows/docker-build.yml"
   pull_request:
     branches:

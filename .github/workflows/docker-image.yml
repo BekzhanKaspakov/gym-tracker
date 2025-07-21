@@ -56,8 +56,8 @@ jobs:
         if: steps.changes.outputs.frontend == 'true'
         uses: docker/build-push-action@v5
         with:
-          context: ./frontend
-          file: ./frontend/Dockerfile
+          context: ./next
+          file: ./next/Dockerfile
           push: true
           tags: ghcr.io/${{ steps.lc.outputs.namespace }}/${{ env.FRONTEND_IMAGE }}:latest
 
@@ -65,7 +65,7 @@ jobs:
         if: steps.changes.outputs.backend == 'true'
         uses: docker/build-push-action@v5
         with:
-          context: ./backend
-          file: ./backend/Dockerfile
+          context: ./go
+          file: ./go/Dockerfile
           push: true
           tags: ghcr.io/${{ steps.lc.outputs.namespace }}/${{ env.BACKEND_IMAGE }}:latest

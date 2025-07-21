@@ -5,15 +5,15 @@ on:
     branches:
       - trunk
     paths:
-      - 'next/**'
-      - 'front/**'
-      - '.github/workflows/docker-build.yml'
+      - "next/**"
+      - "front/**"
+      - ".github/workflows/docker-build.yml"
   pull_request:
     branches:
       - trunk
     paths:
-      - 'next/**'
-      - 'go/**'
+      - "next/**"
+      - "go/**"
 
 jobs:
   detect-and-build:
@@ -65,4 +65,4 @@ jobs:
           context: ./backend
           file: ./backend/Dockerfile
           push: true
-          tags: ghcr.io/${{ env.IMAGE_NAMESPACE }}/${{ env.BACKEND_IMAGE
+          tags: ghcr.io/${{ env.IMAGE_NAMESPACE }}/${{ env.BACKEND_IMAGE }}:latest

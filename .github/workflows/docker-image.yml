@@ -3,7 +3,7 @@ name: Build Frontend and Backend Docker Images
 on:
   push:
     branches:
-      - main
+      - trunk
     paths:
       - 'next/**'
       - 'front/**'

@@ -20,12 +20,15 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      REGISTRY: ghcr.io
-      IMAGE_NAMESPACE: ${{ github.repository_owner }}
       FRONTEND_IMAGE: frontend
       BACKEND_IMAGE: backend
 
     steps:
+      - name: Convert image namespace to lowercase
+        id: lc
+        run: |
+          echo "namespace=$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_OUTPUT"
+
       - name: Checkout code
         uses: actions/checkout@v3
 
@@ -56,7 +59,7 @@ jobs:
           context: ./frontend
           file: ./frontend/Dockerfile
           push: true
-          tags: ghcr.io/${{ env.IMAGE_NAMESPACE }}/${{ env.FRONTEND_IMAGE }}:latest
+          tags: ghcr.io/${{ steps.lc.outputs.namespace }}/${{ env.FRONTEND_IMAGE }}:latest
 
       - name: Build & Push Backend image
         if: steps.changes.outputs.backend == 'true'
@@ -65,4 +68,4 @@ jobs:
           context: ./backend
           file: ./backend/Dockerfile
           push: true
-          tags: ghcr.io/${{ env.IMAGE_NAMESPACE }}/${{ env.BACKEND_IMAGE }}:latest
+          tags: ghcr.io/${{ steps.lc.outputs.namespace }}/${{ env.BACKEND_IMAGE }}:latest

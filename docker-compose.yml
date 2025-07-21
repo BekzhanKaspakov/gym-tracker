@@ -1,6 +1,18 @@
-version: '3.8'
+version: "3.8"
 
 services:
+  nextjs:
+    build:
+      context: ./next
+    container_name: nextjs-app
+    ports:
+      - "80:3000" # serve app on port 80
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      - api
+    restart: always
+
   mongo:
     image: mongo:7
     container_name: mongo
@@ -9,8 +21,8 @@ services:
     volumes:
       - mongo_data:/data/db
 
-  app:
-    build: .
+  api:
+    build: ./go
     container_name: go-server
     ports:
       - "8080:8080"

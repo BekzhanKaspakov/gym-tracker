@@ -26,6 +26,7 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 ENV PORT=3000
+ENV NEXT_PUBLIC_BASE_URI=http://localhost:8080
 
 RUN corepack enable && corepack prepare pnpm@latest --activate
 

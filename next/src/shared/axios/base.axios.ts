@@ -10,6 +10,7 @@ import {
   XSRF_TOKEN_HEADER,
 } from "../constants/auth.constants";
 
+console.log(process.env.NEXT_PUBLIC_BASE_URI);
 export const axiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_URI,
   formSerializer: {

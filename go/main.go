@@ -19,7 +19,7 @@ func main() {
 	// - Credentials share disabled
 	// - Preflight requests cached for 12 hours
 	corsConfig := cors.DefaultConfig()
-	corsConfig.AllowOrigins = []string{"http://localhost:3000"}
+	corsConfig.AllowOrigins = []string{"http://localhost", "http://localhost:3000"}
 	corsConfig.AllowCredentials = true
 	corsConfig.AllowHeaders = []string{"authorization", "content-type"}
 

@@ -28,6 +28,7 @@ jobs:
     env:
       FRONTEND_IMAGE: frontend
       BACKEND_IMAGE: backend
+      NEXT_PUBLIC_BASE_URI: http://localhost:8080
 
     steps:
       - name: Convert image namespace to lowercase

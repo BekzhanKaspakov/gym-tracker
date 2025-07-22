@@ -22,6 +22,7 @@ func main() {
 	corsConfig.AllowOrigins = []string{"http://localhost", "http://localhost:3000"}
 	corsConfig.AllowCredentials = true
 	corsConfig.AllowHeaders = []string{"authorization", "content-type"}
+	// trigger workflow
 
 	r.Use(cors.New(corsConfig))
 	routes.RegisterAuthRoutes(r)

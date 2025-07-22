@@ -66,6 +66,8 @@ jobs:
           file: ./next/Dockerfile
           push: true
           tags: ghcr.io/${{ steps.lc.outputs.namespace }}/${{ env.FRONTEND_IMAGE }}:latest
+          build-args: |
+            NEXT_PUBLIC_BASE_URI=http://localhost:8080
 
       - name: Build & Push Backend image
         if: steps.changes.outputs.backend == 'true'

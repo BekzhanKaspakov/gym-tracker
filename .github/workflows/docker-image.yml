@@ -59,7 +59,11 @@ jobs:
               - 'next/**'
             backend:
               - 'go/**'
-
+              
+      - name: Set Secrets
+        run: | # Secrets needed on the server
+          echo "NEXT_PUBLIC_BASE_URI=http://localhost:8080" >> ./next/.env.production
+          
       - name: Build & Push Frontend image
         if: steps.changes.outputs.frontend == 'true'
         uses: docker/build-push-action@v5

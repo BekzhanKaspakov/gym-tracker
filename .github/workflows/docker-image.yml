@@ -15,6 +15,7 @@ on:
     paths:
       - "next/**"
       - "go/**"
+      - ".github/workflows/docker-build.yml"
 
 jobs:
   detect-and-build:
@@ -58,13 +59,15 @@ jobs:
               - 'next/**'
             backend:
               - 'go/**'
+            .github/workflows/docker-compose.yml:
+              - '.github/workflows/docker-compose.yml'
 
       - name: Set Secrets
         run: | # Secrets needed on the server
           echo "NEXT_PUBLIC_BASE_URI=http://176.126.84.59:9080" >> ./next/.env.production
 
       - name: Build & Push Frontend image
-        if: steps.changes.outputs.frontend == 'true'
+        if: steps.changes.outputs.frontend == 'true' || steps.changes.outputs['.github/workflows/docker-compose.yml'] == 'true'
         uses: docker/build-push-action@v5
         with:
           context: ./next

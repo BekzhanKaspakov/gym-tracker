@@ -4,6 +4,7 @@ import (
 	"gym-tracker/config"
 	"gym-tracker/database"
 	"gym-tracker/routes"
+	"time"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -18,13 +19,14 @@ func main() {
 	// - GET,POST, PUT, HEAD methods
 	// - Credentials share disabled
 	// - Preflight requests cached for 12 hours
-	corsConfig := cors.DefaultConfig()
-	corsConfig.AllowOrigins = []string{"http://localhost", "http://localhost:3000"}
-	corsConfig.AllowCredentials = true
-	corsConfig.AllowHeaders = []string{"authorization", "content-type"}
-	// trigger workflow
-
-	r.Use(cors.New(corsConfig))
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://localhost"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
 	routes.RegisterAuthRoutes(r)
 	routes.RegisterWorkoutRoutes(r)
 	routes.RegisterExerciseRoutes(r)

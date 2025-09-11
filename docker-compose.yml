@@ -21,9 +21,9 @@ services:
       - mongodb
     environment:
       - MONGO_URI=mongodb://mongodb:27017
-      - PORT=8080
+      - PORT=9080
     ports:
-      - "8080:8080"
+      - "9080:9080"
     networks:
       - app-network
 

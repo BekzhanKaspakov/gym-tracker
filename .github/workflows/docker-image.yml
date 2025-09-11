@@ -29,7 +29,6 @@ jobs:
     env:
       FRONTEND_IMAGE: frontend
       BACKEND_IMAGE: backend
-      NEXT_PUBLIC_BASE_URI: http://localhost:8080
 
     steps:
       - name: Convert image namespace to lowercase
@@ -62,7 +61,7 @@ jobs:
 
       - name: Set Secrets
         run: | # Secrets needed on the server
-          echo "NEXT_PUBLIC_BASE_URI=http://localhost:9080" >> ./next/.env.production
+          echo "NEXT_PUBLIC_BASE_URI=http://176.126.84.59:9080" >> ./next/.env.production
 
       - name: Build & Push Frontend image
         if: steps.changes.outputs.frontend == 'true'

@@ -2,11 +2,10 @@ package controllers
 
 import (
 	"context"
-	"net/http"
-	"time"
-
 	"gym-tracker/database"
 	"gym-tracker/models"
+	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 

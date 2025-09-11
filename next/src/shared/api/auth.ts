@@ -26,7 +26,6 @@ interface ErrorResponse {
 }
 
 export const useLogin = () => {
-  console.log("AXIOS INSTANCE" + axiosInstance.getUri());
   return useMutation<LoginResponse, AxiosError<ErrorResponse>, AuthRequest>({
     mutationFn: (body: AuthRequest) =>
       axiosInstance.post(AUTH_URI.login, body).then(({ data }) => data),

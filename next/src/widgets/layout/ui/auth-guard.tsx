@@ -6,13 +6,13 @@ const UN_AUTH_PAGES = ["/register", "/login"];
 
 export function AuthGuard({ children }: PropsWithChildren) {
   const pathname = usePathname();
-  const { isAuth } = useAuth();
+  const { isAuth, isLoading } = useAuth();
 
-  if (isAuth && UN_AUTH_PAGES.includes(pathname ?? "")) {
+  if (!isLoading && isAuth && UN_AUTH_PAGES.includes(pathname ?? "")) {
     redirect("/");
   }
 
-  if (!isAuth && !UN_AUTH_PAGES.includes(pathname ?? "")) {
+  if (!isLoading && !isAuth && !UN_AUTH_PAGES.includes(pathname ?? "")) {
     redirect("/login");
   }
 

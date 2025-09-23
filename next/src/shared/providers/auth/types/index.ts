@@ -6,6 +6,7 @@ export interface AuthContextType {
   handleLogout: () => void;
   user: UserContext | undefined;
   setUser: React.Dispatch<React.SetStateAction<UserContext | undefined>>;
+  isLoading: boolean;
 }
 
 type EmptyObj = Record<PropertyKey, never>;

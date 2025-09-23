@@ -1,7 +1,6 @@
 "use client";
 
 import React, { createContext, useCallback, useEffect, useState } from "react";
-
 import { AuthContextType, AuthProviderProps, UserContext } from "./types";
 import { STORAGE_KEYS } from "@/shared/constants/auth.constants";
 import { useLogout } from "@/shared/api/auth";
@@ -13,13 +12,19 @@ export const AuthContext = createContext<AuthContextType | undefined>(
 );
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const isAuthInit =
-    typeof window !== "undefined"
-      ? !!localStorage.getItem(STORAGE_KEYS.isAuth)
-      : false;
-  const [isAuth, setIsAuth] = useState<boolean>(isAuthInit);
+  const [isAuth, setIsAuth] = useState<boolean>(false);
   const [user, setUser] = useState<UserContext>();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const { mutateAsync: logout } = useLogout();
+
+  // Initialize auth state on mount
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const auth = !!localStorage.getItem(STORAGE_KEYS.isAuth);
+      setIsAuth(auth);
+    }
+    setIsLoading(false);
+  }, []);
 
   const setIsAuthAndRemoveStorage = () => {
     removeLocalStorageItems();
@@ -34,7 +39,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     await logout(undefined, {
       onError: () => {
-        // window.location используется из-за того что AuthProvider расположен вне контекста AppRouter
         removeLocalStorageItems([STORAGE_KEYS.isAuth]);
       },
       onSuccess: () => {
@@ -60,7 +64,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       window.removeEventListener(CustomEvents.UNAUTHORIZED, unAuthLogout);
       window.removeEventListener(CustomEvents.FORCE_LOGOUT, handleForcedLogout);
     };
-  }, [setIsAuth, handleLogout]);
+  }, [handleLogout]);
 
   return (
     <AuthContext.Provider
@@ -70,6 +74,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         handleLogout,
         user,
         setUser,
+        isLoading,
       }}
     >
       {children}
